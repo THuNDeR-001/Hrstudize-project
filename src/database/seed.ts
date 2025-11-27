@@ -1,6 +1,4 @@
 import { Pool } from 'pg';
-import * as fs from 'fs';
-import * as path from 'path';
 import * as bcrypt from 'bcrypt';
 import { config } from '../config';
 import { logger } from '../utils/logger';

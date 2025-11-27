@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Auth API - Live Testing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .response {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .response pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .success {
+            border-left-color: #10b981;
+            background: #d1fae5;
+        }
+
+        .error {
+            border-left-color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .info-box {
+            background: #e0e7ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .info-box p {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-box code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', monospace;
+            font-size: 12px;
+        }
+
+        .token-display {
+            background: #1f2937;
+            color: #10b981;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Monaco', monospace;
+            font-size: 11px;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .badge-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .badge-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #666;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 JWT Authentication API</h1>
+            <p>Live Testing Dashboard - PostgreSQL Backend Challenge</p>
+        </div>
+
+        <div class="dashboard">
+            <!-- Registration -->
+            <div class="card">
+                <h2>1️⃣ User Registration</h2>
+                <div class="info-box">
+                    <p>Register a new user with email, password, and phone number.</p>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="user@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password (min 8 chars, uppercase, lowercase, number, special)</label>
+                    <input type="password" id="regPassword" placeholder="Password123!">
+                </div>
+                <div class="form-group">
+                    <label>Phone (E.164 format)</label>
+                    <input type="tel" id="regPhone" placeholder="+15551234567">
+                </div>
+                <button id="registerBtn">Register User</button>
+                <div id="regResponse"></div>
+            </div>
+
+            <!-- Login -->
+            <div class="card">
+                <h2>2️⃣ User Login</h2>
+                <div class="info-box">
+                    <p>Login with credentials. Returns JWT tokens or requires 2FA.</p>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="user@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Password123!">
+                </div>
+                <button id="loginBtn">Login</button>
+                <div id="loginResponse"></div>
+            </div>
+
+            <!-- Enable 2FA -->
+            <div class="card">
+                <h2>3️⃣ Enable 2FA</h2>
+                <div class="info-box">
+                    <p>Enable two-factor authentication. OTP will be logged to console and <code>logs/otp.log</code></p>
+                </div>
+                <button id="enable2FABtn">Enable 2FA</button>
+                <div id="enable2FAResponse"></div>
+            </div>
+
+            <!-- Verify OTP -->
+            <div class="card">
+                <h2>4️⃣ Verify OTP</h2>
+                <div class="info-box">
+                    <p>Verify OTP code for 2FA enable or login. Check browser console for OTP.</p>
+                </div>
+                <div class="form-group">
+                    <label>User ID</label>
+                    <input type="text" id="otpUserId" placeholder="User ID from previous step">
+                </div>
+                <div class="form-group">
+                    <label>OTP Code</label>
+                    <input type="text" id="otpCode" placeholder="123456">
+                </div>
+                <div class="form-group">
+                    <label>Purpose</label>
+                    <select id="otpPurpose" style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <option value="enable_2fa">Enable 2FA</option>
+                        <option value="login_2fa">Login with 2FA</option>
+                    </select>
+                </div>
+                <button id="verifyOTPBtn">Verify OTP</button>
+                <div id="verifyOTPResponse"></div>
+            </div>
+
+            <!-- Get Profile -->
+            <div class="card">
+                <h2>5️⃣ Get Profile (Protected)</h2>
+                <div class="info-box">
+                    <p>Access protected endpoint using JWT access token.</p>
+                </div>
+                <button id="profileBtn">Get My Profile</button>
+                <div id="profileResponse"></div>
+            </div>
+
+            <!-- Refresh Token -->
+            <div class="card">
+                <h2>6️⃣ Refresh Token</h2>
+                <div class="info-box">
+                    <p>Get a new access token using refresh token.</p>
+                </div>
+                <button id="refreshBtn">Refresh Access Token</button>
+                <div id="refreshResponse"></div>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="card">
+                <h2>7️⃣ Forgot Password</h2>
+                <div class="info-box">
+                    <p>Request password reset. Token will be logged to console.</p>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="forgotEmail" placeholder="user@example.com">
+                </div>
+                <button id="forgotBtn">Request Password Reset</button>
+                <div id="forgotResponse"></div>
+            </div>
+
+            <!-- Reset Password -->
+            <div class="card">
+                <h2>8️⃣ Reset Password</h2>
+                <div class="info-box">
+                    <p>Reset password using the reset token from console.</p>
+                </div>
+                <div class="form-group">
+                    <label>Reset Token</label>
+                    <input type="text" id="resetToken" placeholder="Token from console/logs">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" placeholder="NewPassword123!">
+                </div>
+                <button id="resetBtn">Reset Password</button>
+                <div id="resetResponse"></div>
+            </div>
+
+            <!-- Token Display -->
+            <div class="card full-width">
+                <h2>🔑 Current Session Tokens</h2>
+                <div class="info-box">
+                    <h3>Access Token <span class="badge badge-info" id="accessTokenExpiry"></span></h3>
+                    <div class="token-display" id="accessTokenDisplay">Not logged in</div>
+                </div>
+                <div class="info-box">
+                    <h3>Refresh Token <span class="badge badge-success" id="refreshTokenExpiry"></span></h3>
+                    <div class="token-display" id="refreshTokenDisplay">Not logged in</div>
+                </div>
+                <div class="info-box">
+                    <h3>User ID</h3>
+                    <div class="token-display" id="userIdDisplay">-</div>
+                </div>
+            </div>
+
+            <!-- Server Logs -->
+            <div class="card full-width">
+                <h2>📋 Recent Activity Log</h2>
+                <div id="activityLog" style="background: #1f2937; color: #10b981; padding: 15px; border-radius: 6px; font-family: Monaco, monospace; font-size: 12px; max-height: 400px; overflow-y: auto;">
+                    <div style="color: #9ca3af;">Waiting for API calls...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api/auth';
+        let accessToken = null;
+        let refreshToken = null;
+        let currentUserId = null;
+        let activityLogs = [];
+
+        function logActivity(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                info: '#3b82f6',
+                success: '#10b981',
+                error: '#ef4444',
+                warning: '#f59e0b'
+            };
+            activityLogs.unshift(`<div style="color: ${colors[type]}; margin-bottom: 5px;">[${timestamp}] ${message}</div>`);
+            if (activityLogs.length > 50) activityLogs.pop();
+            document.getElementById('activityLog').innerHTML = activityLogs.join('');
+        }
+
+        function displayResponse(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            const className = isError ? 'response error' : 'response success';
+            element.innerHTML = `<div class="${className}"><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+        }
+
+        function updateTokenDisplay() {
+            document.getElementById('accessTokenDisplay').textContent = accessToken || 'Not logged in';
+            document.getElementById('refreshTokenDisplay').textContent = refreshToken || 'Not logged in';
+            document.getElementById('userIdDisplay').textContent = currentUserId || '-';
+            document.getElementById('accessTokenExpiry').textContent = accessToken ? '15 min' : '';
+            document.getElementById('refreshTokenExpiry').textContent = refreshToken ? '7 days' : '';
+        }
+
+        async function register() {
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const phone = document.getElementById('regPhone').value;
+
+            logActivity(`🔄 Registering user: ${email}`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, phone })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    currentUserId = data.user.id;
+                    document.getElementById('otpUserId').value = currentUserId;
+                    logActivity(`✅ User registered successfully: ${email}`, 'success');
+                    displayResponse('regResponse', data);
+                    updateTokenDisplay();
+                } else {
+                    logActivity(`❌ Registration failed: ${data.error}`, 'error');
+                    displayResponse('regResponse', data, true);
+                }
+            } catch (error) {
+                logActivity(`❌ Network error: ${error.message}`, 'error');
+                displayResponse('regResponse', { error: error.message }, true);
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            logActivity(`🔄 Logging in: ${email}`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.requires2FA) {
+                        currentUserId = data.userId;
+                        document.getElementById('otpUserId').value = currentUserId;
+                        logActivity(`⚠️ 2FA required. Check console/logs for OTP`, 'warning');
+                        console.log('🔐 2FA REQUIRED - Check server console or logs/otp.log for OTP code');
+                    } else {
+                        accessToken = data.accessToken;
+                        refreshToken = data.refreshToken;
+                        currentUserId = data.user.id;
+                        logActivity(`✅ Login successful: ${email}`, 'success');
+                    }
+                    displayResponse('loginResponse', data);
+                    updateTokenDisplay();
+                } else {
+                    logActivity(`❌ Login failed: ${data.error}`, 'error');
+                    displayResponse('loginResponse', data, true);
+                }
+            } catch (error) {
+                logActivity(`❌ Network error: ${error.message}`, 'error');
+                displayResponse('loginResponse', { error: error.message }, true);
+            }
+        }
+
+        async function enable2FA() {
+            if (!accessToken) {
+                alert('Please login first!');
+                return;
+            }
+
+            logActivity(`🔄 Enabling 2FA...`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/2fa/enable`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    logActivity(`⚠️ OTP sent! Check server console or logs/otp.log`, 'warning');
+                    console.log('🔐 2FA OTP SENT - Check server console or logs/otp.log for OTP code');
+                    displayResponse('enable2FAResponse', data);
+                } else {
+                    logActivity(`❌ Enable 2FA failed: ${data.error}`, 'error');
+                    displayResponse('enable2FAResponse', data, true);
+                }
+            } catch (error) {
+                logActivity(`❌ Network error: ${error.message}`, 'error');
+                displayResponse('enable2FAResponse', { error: error.message }, true);
+            }
+        }
+
+        async function verifyOTP() {
+            const userId = document.getElementById('otpUserId').value;
+            const otp = document.getElementById('otpCode').value;
+            const purpose = document.getElementById('otpPurpose').value;
+
+            logActivity(`🔄 Verifying OTP for ${purpose}...`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/2fa/verify?userId=${userId}&purpose=${purpose}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otp })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.accessToken) {
+                        accessToken = data.accessToken;
+                        refreshToken = data.refreshToken;
+                        updateTokenDisplay();
+                    }
+                    logActivity(`✅ OTP verified successfully for ${purpose}`, 'success');
+                    displayResponse('verifyOTPResponse', data);
+                } else {
+                    logActivity(`❌ OTP verification failed: ${data.error}`, 'error');
+                    displayResponse('verifyOTPResponse', data, true);
+                }
+            } catch (error) {
+                logActivity(`❌ Network error: ${error.message}`, 'error');
+                displayResponse('verifyOTPResponse', { error: error.message }, true);
+            }
+        }
+
+        async function getProfile() {
+            if (!accessToken) {
+                alert('Please login first!');
+                return;
+            }
+
+            logActivity(`🔄 Fetching user profile...`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    logActivity(`✅ Profile fetched successfully`, 'success');
+                    displayResponse('profileResponse', data);
+                } else {
+                    logActivity(`❌ Failed to fetch profile: ${data.error}`, 'error');
+                    displayResponse('profileResponse', data, true);
+                }
+            } catch (error) {
+                logActivity(`❌ Network error: ${error.message}`, 'error');
+                displayResponse('profileResponse', { error: error.message }, true);
+            }
+        }
+
+        async function refreshAccessToken() {
+            if (!refreshToken) {
+                alert('No refresh token available. Please login first!');
+                return;
+            }
+
+            logActivity(`🔄 Refreshing access token...`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/token/refresh`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ refreshToken })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    accessToken = data.accessToken;
+                    updateTokenDisplay();
+                    logActivity(`✅ Access token refreshed successfully`, 'success');
+                    displayResponse('refreshResponse', data);
+                } else {
+                    logActivity(`❌ Token refresh failed: ${data.error}`, 'error');
+                    displayResponse('refreshResponse', data, true);
+                }
+            } catch (error) {
+                logActivity(`❌ Network error: ${error.message}`, 'error');
+                displayResponse('refreshResponse', { error: error.message }, true);
+            }
+        }
+
+        async function forgotPassword() {
+            const email = document.getElementById('forgotEmail').value;
+
+            logActivity(`🔄 Requesting password reset for: ${email}`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/forgot-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    logActivity(`⚠️ Password reset requested. Check server console for token`, 'warning');
+                    console.log('🔐 PASSWORD RESET TOKEN - Check server console or logs for reset token');
+                    displayResponse('forgotResponse', data);
+                } else {
+                    logActivity(`❌ Password reset request failed: ${data.error}`, 'error');
+                    displayResponse('forgotResponse', data, true);
+                }
+            } catch (error) {
+                logActivity(`❌ Network error: ${error.message}`, 'error');
+                displayResponse('forgotResponse', { error: error.message }, true);
+            }
+        }
+
+        async function resetPassword() {
+            const token = document.getElementById('resetToken').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            logActivity(`🔄 Resetting password...`, 'info');
+
+            try {
+                const response = await fetch(`${API_BASE}/reset-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, newPassword })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    logActivity(`✅ Password reset successfully`, 'success');
+                    displayResponse('resetResponse', data);
+                } else {
+                    logActivity(`❌ Password reset failed: ${data.error}`, 'error');
+                    displayResponse('resetResponse', data, true);
+                }
+            } catch (error) {
+                logActivity(`❌ Network error: ${error.message}`, 'error');
+                displayResponse('resetResponse', { error: error.message }, true);
+            }
+        }
+
+        // Initialize
+        updateTokenDisplay();
+        logActivity('🚀 Dashboard ready. Server: http://localhost:3000', 'success');
+
+        // Attach event listeners
+        document.getElementById('registerBtn').addEventListener('click', register);
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('enable2FABtn').addEventListener('click', enable2FA);
+        document.getElementById('verifyOTPBtn').addEventListener('click', verifyOTP);
+        document.getElementById('profileBtn').addEventListener('click', getProfile);
+        document.getElementById('refreshBtn').addEventListener('click', refreshAccessToken);
+        document.getElementById('forgotBtn').addEventListener('click', forgotPassword);
+        document.getElementById('resetBtn').addEventListener('click', resetPassword);
+    </script>
+</body>
+</html>

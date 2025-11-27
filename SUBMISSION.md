@@ -5,6 +5,25 @@
 **Project Name:** PostgreSQL Backend - JWT Authentication + 2FA + Forgot Password  
 **Submission Date:** November 28, 2025  
 **Technology Stack:** Node.js, Express, TypeScript, PostgreSQL  
+**Demo Dashboard:** http://localhost:3000 (Frontend included!)
+
+## 🎯 Completed Features
+
+✅ **User Registration** - Email, password (bcrypt hashed), phone number  
+✅ **User Login** - JWT access + refresh tokens  
+✅ **2FA via SMS OTP** - Enable/disable, verify OTP codes  
+✅ **Forgot Password** - Request reset token via email  
+✅ **Reset Password** - Secure token-based password reset  
+✅ **Protected Routes** - JWT authentication middleware  
+✅ **Token Refresh** - Generate new access tokens  
+✅ **PostgreSQL Database** - 5 normalized tables with indexes  
+✅ **Input Validation** - Joi schemas for all endpoints  
+✅ **Rate Limiting** - Prevent brute force attacks  
+✅ **Audit Logging** - Track all authentication events  
+✅ **Comprehensive Tests** - Jest + Supertest integration tests  
+✅ **Docker Deployment** - docker-compose.yml for easy setup  
+✅ **Frontend Dashboard** - Live testing interface  
+✅ **Cryptographic Proof** - ECDSA signature verification  
 
 ## Quick Start Guide
 

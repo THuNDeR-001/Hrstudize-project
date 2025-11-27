@@ -1,0 +1,110 @@
+harshvardhanmittal@Harshvardhans-MacBook-Pro PROOF_OF_SUBMISSION % npm run dev                                                              
+
+> postgres-jwt-auth-backend@1.0.0 dev
+> ts-node-dev --respawn --transpile-only src/index.ts
+
+[INFO] 03:08:14 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+info: Server is running on port 3000 {"service":"auth-api","timestamp":"2025-11-28 03:08:14"}
+
+🚀 Server is running on http://localhost:3000
+🎨 Frontend Dashboard: http://localhost:3000
+📊 Health check: http://localhost:3000/health
+🔐 API endpoint: http://localhost:3000/api/auth
+
+debug: Executed query {"duration":26,"rows":0,"service":"auth-api","text":"SELECT id FROM users WHERE email = $1","timestamp":"2025-11-28 03:09:10"}
+debug: Executed query {"duration":5,"rows":1,"service":"auth-api","text":"INSERT INTO users (email, password_hash, phone)\n       VALUES ($1, $2, $3)\n       RETURNING id, email, phone, is_active, is_2fa_enabled, created_at, updated_at","timestamp":"2025-11-28 03:09:10"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:09:10"}
+info: User registered: thunder999@gmail.com {"service":"auth-api","timestamp":"2025-11-28 03:09:10"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:09:22"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"INSERT INTO refresh_tokens (user_id, token_hash, expires_at, ip_address)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:09:22"}
+debug: Executed query {"duration":2,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:09:22"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE id = $1","timestamp":"2025-11-28 03:09:27"}
+debug: Executed query {"duration":6,"rows":1,"service":"auth-api","text":"INSERT INTO otps (user_id, code_hash, purpose, expires_at)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:09:27"}
+info: [MOCK SMS] [2025-11-27T21:39:27.155Z] To: +918764647478, Message: Your 2FA setup OTP is: 678117 {"service":"auth-api","timestamp":"2025-11-28 03:09:27"}
+
+==================== MOCK SMS ====================
+To: +918764647478
+Message: Your 2FA setup OTP is: 678117
+==================================================
+
+debug: Executed query {"duration":2,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:09:27"}
+info: 2FA enable requested for user: 9c38c39a-801e-4654-9a67-1e2c81a81aba {"service":"auth-api","timestamp":"2025-11-28 03:09:27"}
+debug: Executed query {"duration":6,"rows":1,"service":"auth-api","text":"SELECT * FROM otps\n       WHERE user_id = $1 AND purpose = $2 AND used = false AND expires_at > NOW()\n       ORDER BY created_at DESC\n       LIMIT 1","timestamp":"2025-11-28 03:09:37"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"UPDATE otps SET used = true WHERE id = $1","timestamp":"2025-11-28 03:09:38"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"UPDATE users SET is_2fa_enabled = true WHERE id = $1","timestamp":"2025-11-28 03:09:38"}
+debug: Executed query {"duration":2,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:09:38"}
+info: 2FA enabled for user: 9c38c39a-801e-4654-9a67-1e2c81a81aba {"service":"auth-api","timestamp":"2025-11-28 03:09:38"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE id = $1","timestamp":"2025-11-28 03:09:41"}
+debug: Executed query {"duration":6,"rows":1,"service":"auth-api","text":"SELECT * FROM refresh_tokens\n         WHERE token_hash = $1 AND revoked = false AND expires_at > NOW()","timestamp":"2025-11-28 03:09:44"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:09:44"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:09:56"}
+debug: Executed query {"duration":6,"rows":1,"service":"auth-api","text":"INSERT INTO password_resets (user_id, token_hash, expires_at)\n       VALUES ($1, $2, $3)","timestamp":"2025-11-28 03:09:56"}
+info: Password reset token for thunder999@gmail.com: 84663fbd24f000a742b4bd1f90a7ed0d441752056627d6350640cd9b6a7c676c {"service":"auth-api","timestamp":"2025-11-28 03:09:56"}
+
+==================== PASSWORD RESET ====================
+Email: thunder999@gmail.com
+Reset Token: 84663fbd24f000a742b4bd1f90a7ed0d441752056627d6350640cd9b6a7c676c
+Expires at: 2025-11-27T22:39:56.354Z
+========================================================
+
+debug: Executed query {"duration":5,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:09:56"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"SELECT * FROM password_resets\n       WHERE token_hash = $1 AND used = false AND expires_at > NOW()","timestamp":"2025-11-28 03:10:14"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:10:14"}
+info: Password reset completed for user: 9c38c39a-801e-4654-9a67-1e2c81a81aba {"service":"auth-api","timestamp":"2025-11-28 03:10:14"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:10:33"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:10:33"}
+error: Login error: Invalid credentials {"service":"auth-api","stack":"Error: Invalid credentials\n    at AuthService.login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/services/auth.service.ts:76:13)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/controllers/auth.controller.ts:38:22)","timestamp":"2025-11-28 03:10:33"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:10:38"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:10:38"}
+error: Login error: Invalid credentials {"service":"auth-api","stack":"Error: Invalid credentials\n    at AuthService.login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/services/auth.service.ts:76:13)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/controllers/auth.controller.ts:38:22)","timestamp":"2025-11-28 03:10:38"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:10:47"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:10:47"}
+error: Login error: Invalid credentials {"service":"auth-api","stack":"Error: Invalid credentials\n    at AuthService.login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/services/auth.service.ts:76:13)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/controllers/auth.controller.ts:38:22)","timestamp":"2025-11-28 03:10:47"}
+debug: Executed query {"duration":25,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:11:31"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:11:32"}
+error: Login error: Invalid credentials {"service":"auth-api","stack":"Error: Invalid credentials\n    at AuthService.login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/services/auth.service.ts:76:13)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/controllers/auth.controller.ts:38:22)","timestamp":"2025-11-28 03:11:32"}
+debug: Executed query {"duration":2,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:11:48"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:11:48"}
+error: Login error: Invalid credentials {"service":"auth-api","stack":"Error: Invalid credentials\n    at AuthService.login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/services/auth.service.ts:76:13)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/controllers/auth.controller.ts:38:22)","timestamp":"2025-11-28 03:11:48"}
+debug: Executed query {"duration":2,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:11:55"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:11:55"}
+error: Login error: Invalid credentials {"service":"auth-api","stack":"Error: Invalid credentials\n    at AuthService.login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/services/auth.service.ts:76:13)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at login (/Users/harshvardhanmittal/Downloads/Hrstudize project/src/controllers/auth.controller.ts:38:22)","timestamp":"2025-11-28 03:11:55"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:12:08"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO password_resets (user_id, token_hash, expires_at)\n       VALUES ($1, $2, $3)","timestamp":"2025-11-28 03:12:08"}
+info: Password reset token for thunder999@gmail.com: 7768ebf2a05dd46b26baa408f713f645fe2aabc75b0a7dfd5dce07760bd22e79 {"service":"auth-api","timestamp":"2025-11-28 03:12:08"}
+
+==================== PASSWORD RESET ====================
+Email: thunder999@gmail.com
+Reset Token: 7768ebf2a05dd46b26baa408f713f645fe2aabc75b0a7dfd5dce07760bd22e79
+Expires at: 2025-11-27T22:42:08.342Z
+========================================================
+
+debug: Executed query {"duration":1,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:12:08"}
+debug: Executed query {"duration":18,"rows":1,"service":"auth-api","text":"SELECT * FROM password_resets\n       WHERE token_hash = $1 AND used = false AND expires_at > NOW()","timestamp":"2025-11-28 03:12:45"}
+debug: Executed query {"duration":2,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:12:45"}
+info: Password reset completed for user: 9c38c39a-801e-4654-9a67-1e2c81a81aba {"service":"auth-api","timestamp":"2025-11-28 03:12:45"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:12:52"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO otps (user_id, code_hash, purpose, expires_at)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:12:53"}
+info: [MOCK SMS] [2025-11-27T21:42:53.070Z] To: +918764647478, Message: Your login OTP is: 678876 {"service":"auth-api","timestamp":"2025-11-28 03:12:53"}
+
+==================== MOCK SMS ====================
+To: +918764647478
+Message: Your login OTP is: 678876
+==================================================
+
+debug: Executed query {"duration":1,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:12:53"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE email = $1","timestamp":"2025-11-28 03:13:22"}
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO otps (user_id, code_hash, purpose, expires_at)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:13:22"}
+info: [MOCK SMS] [2025-11-27T21:43:22.674Z] To: +918764647478, Message: Your login OTP is: 493984 {"service":"auth-api","timestamp":"2025-11-28 03:13:22"}
+
+==================== MOCK SMS ====================
+To: +918764647478
+Message: Your login OTP is: 493984
+==================================================
+
+debug: Executed query {"duration":3,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:13:22"}
+debug: Executed query {"duration":6,"rows":1,"service":"auth-api","text":"SELECT * FROM otps\n       WHERE user_id = $1 AND purpose = $2 AND used = false AND expires_at > NOW()\n       ORDER BY created_at DESC\n       LIMIT 1","timestamp":"2025-11-28 03:13:31"}
+debug: Executed query {"duration":4,"rows":1,"service":"auth-api","text":"UPDATE otps SET used = true WHERE id = $1","timestamp":"2025-11-28 03:13:31"}
+debug: Executed query {"duration":1,"rows":1,"service":"auth-api","text":"SELECT * FROM users WHERE id = $1","timestamp":"2025-11-28 03:13:31"}
+debug: Executed query {"duration":2,"rows":1,"service":"auth-api","text":"INSERT INTO refresh_tokens (user_id, token_hash, expires_at, ip_address)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:13:31"}
+debug: Executed query {"duration":1,"rows":1,"service":"auth-api","text":"INSERT INTO audit_logs (user_id, event_type, success, metadata)\n       VALUES ($1, $2, $3, $4)","timestamp":"2025-11-28 03:13:31"}
