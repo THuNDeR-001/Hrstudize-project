@@ -9,3 +9,5 @@ coverage/
 *.swo
 *~
 .idea/
+PROOF_OF_SUBMISSION/proof_priv.pem
+PROOF_OF_SUBMISSION/proof_sig.bin

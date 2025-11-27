@@ -38,13 +38,17 @@ echo "Signature created: proof.txt"
 # Verify the signature
 echo ""
 echo "Verifying signature..."
-VERIFY_RESULT=$(echo -n "$MESSAGE" | openssl dgst -sha256 -verify proof_pub.pem -signature <(base64 -d proof.txt) && echo "SUCCESS" || echo "FAILED")
-
-if [ "$VERIFY_RESULT" = "SUCCESS" ]; then
+base64 -D -i proof.txt -o proof_sig.bin
+if echo -n "$MESSAGE" | openssl dgst -sha256 -verify proof_pub.pem -signature proof_sig.bin > /dev/null 2>&1; then
     echo "✓ Signature verification: SUCCESS"
+    VERIFY_RESULT="SUCCESS"
 else
     echo "✗ Signature verification: FAILED"
+    VERIFY_RESULT="FAILED"
 fi
+
+# Clean up temporary file
+rm -f proof_sig.bin
 
 echo ""
 echo "=== Proof Generation Complete ==="
