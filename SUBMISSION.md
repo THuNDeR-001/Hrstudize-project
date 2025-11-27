@@ -257,25 +257,25 @@ d14f096e0858dabcb820164b88a10a11005ba1b5e2c8df7de794e045e6f66c47
 **Commit Hash:**
 ```bash
 git rev-parse HEAD
-# Output: 3f33d25af103333ec9b412fac04b88ae1d61fcff
+# Output: 7b2a17dd41d9a75b14c7956d59dc9e98bd884499
 ```
 
 **Message (Challenge + Commit Hash):**
 ```
-d14f096e0858dabcb820164b88a10a11005ba1b5e2c8df7de794e045e6f66c473f33d25af103333ec9b412fac04b88ae1d61fcff
+d14f096e0858dabcb820164b88a10a11005ba1b5e2c8df7de794e045e6f66c477b2a17dd41d9a75b14c7956d59dc9e98bd884499
 ```
 
 **SHA256 of Message:**
 ```bash
-echo -n "d14f096e0858dabcb820164b88a10a11005ba1b5e2c8df7de794e045e6f66c473f33d25af103333ec9b412fac04b88ae1d61fcff" | openssl dgst -sha256
-# Output: caea384a9699013fc26b5bc2896ae38f5bf07152d8e9e68729bcc05219bfdda6
+echo -n "d14f096e0858dabcb820164b88a10a11005ba1b5e2c8df7de794e045e6f66c477b2a17dd41d9a75b14c7956d59dc9e98bd884499" | openssl dgst -sha256
+# Output: ff83f9f16aca219dbc9a79a0ba0dbc7f3cc4db7951ed1f881119f2bf23c1a663
 ```
 
 **Signature Verification:**
 ```bash
 cd PROOF_OF_SUBMISSION
 base64 -D -i proof.txt -o proof_sig.bin
-echo -n "d14f096e0858dabcb820164b88a10a11005ba1b5e2c8df7de794e045e6f66c473f33d25af103333ec9b412fac04b88ae1d61fcff" | openssl dgst -sha256 -verify proof_pub.pem -signature proof_sig.bin
+echo -n "d14f096e0858dabcb820164b88a10a11005ba1b5e2c8df7de794e045e6f66c477b2a17dd41d9a75b14c7956d59dc9e98bd884499" | openssl dgst -sha256 -verify proof_pub.pem -signature proof_sig.bin
 # Output: Verified OK
 ```
 
